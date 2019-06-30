@@ -46,7 +46,7 @@ def doTaskHandler(id):
 
 
 @app.route("/givenTask/<id>", methods=['GET'])
-def givenTaskHandler():
+def givenTaskHandler(id):
     ui = UsersInterface()
     user_id = session['user_id']
     ui.add_task_executor(task_id=int(id), user_id=user_id)
