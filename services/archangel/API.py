@@ -41,8 +41,11 @@ class API:
         t = 0
         for i, span_start in enumerate(API._datetime_range(start, end, delta)):
             t += 1
-            avg = API.get_avg_metric(token, metric_name,
+            try:
+                avg = API.get_avg_metric(token, metric_name,
                                      span_start, span_start + delta)
+            except Exception as e:
+                avg = None
             if avg is not None:
                 res.append((i, avg))
 
@@ -64,6 +67,3 @@ class API:
         while start < end:
             yield start
             start += delta
-
-print(API.get_involve_estimate(config.DEVICE_TOKEN, datetime.datetime(2019, 6, 30, 13, 28, 15),
-                               datetime.datetime(2019, 6, 30, 13, 28, 17)))
