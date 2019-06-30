@@ -1,0 +1,99 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- MDBootstrap Datatables  -->
+    <script type="text/javascript" src="js/addons/datatables.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Название нашей хуйни</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Просмотр заданий <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Мои задания</a>
+            </li>
+        </ul>
+    </div>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
+</nav>
+
+<style>
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+    }
+
+    tr[data-href] {
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <table id="dtBasicExample" class='table table-bordered table-striped table-hover table-sm' cellspacing="0"
+           width="70%">
+        <thead>
+        <tr>
+            <th class="th-sm">Name</th>
+            <th class="th-sm">Email</th>
+            <th class="th-sm">Country</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+        <tr class="table-row" data-href="САЙТАСХАТА/{{task.author_id}}">
+            <td>{{task.name}}</td>
+            <td>{{task.cost}}</td>
+            <td>{{task.author_id}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>Name
+            </th>
+            <th>Email
+            </th>
+            <th>Country
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rows = document.querySelectorAll("tr[data-href]");
+
+            rows.forEach(row => {
+                row.addEventListener("click", () => {
+                    window.location.href = row.dataset.href;
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+    </script>
+
+</div>
+</body>
+</html>
