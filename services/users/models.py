@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
+from common.config import config
 
 BaseUsers = declarative_base()
 
@@ -11,7 +12,7 @@ class UserMeta(BaseUsers):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    token = Column(String, nullable=False)
+    token = Column(String, nullable=False, default=config.DEVICE_TOKEN)
 
 
 class TaskMeta(BaseUsers):
