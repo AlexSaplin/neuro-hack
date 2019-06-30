@@ -92,15 +92,22 @@ def reg():
 @app.route('/list')
 def listHandler():
     ui = UsersInterface()
-    tasks = ui.get_tasks()
-    return render_template('list.html', tasks=tasks)
+    user_id = session['user_id']
+    tasks = ui.get_user_free_tasks(user_id=user_id)
+    authors = []
+    for task in tasks:
+        authors.append(ui.get_usermeta_by_id(task['author_id'])['name'])
+    return render_template('list.html', tasks=zip(tasks, authors))
 
 @app.route('/mylist')
 def mylistHandler():
     ui = UsersInterface()
     user_id = session['user_id']
     tasks = ui.get_tasks(user_id=user_id)
-    return render_template('mylist.html', tasks=tasks)
+    authors = []
+    for task in tasks:
+        authors.append(ui.get_usermeta_by_id(task['author_id'])['name'])
+    return render_template('mylist.html', tasks=zip(tasks, authors))
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logoutHandler():
