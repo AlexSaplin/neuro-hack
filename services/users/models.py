@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Time, Interval
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -20,6 +20,8 @@ class TaskMeta(BaseUsers):
     name = Column(String, nullable=False)
     description = Column(String, default='')
     author_id = Column(Integer, nullable=False)
+    duration = Column(Interval, nullable=False)
+    results = Column(String(1024), nullable=True)
 
 
 class TaskUserMeta(BaseUsers):
@@ -28,3 +30,5 @@ class TaskUserMeta(BaseUsers):
     id = Column(Integer, primary_key=True)
     task_id = Column(Integer, nullable=False)
     user_id = Column(Integer, nullable=False)
+    start_time = Column(Time, nullable=False)
+
