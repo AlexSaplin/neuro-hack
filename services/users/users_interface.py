@@ -96,7 +96,7 @@ class UsersInterface:
         with self.connect() as session:
             if session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                   TaskUserMeta.user_id == user_id).first() is None:
-                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, start_time=datetime.datetime.utcnow()+datetime.timedelta(180, 0)))
+                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, start_time=datetime.datetime.utcnow()+datetime.timedelta(hours=3)))
                 session.flush()
 
     def remove_task_executor(self, task_id: int, user_id: int):
