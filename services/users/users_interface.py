@@ -49,7 +49,7 @@ class UsersInterface:
             result_id = result.id if result is not None else None
         return result_id
 
-    def add_task(self, user_id: int, name: str, duration: float, description: str = ''):
+    def add_task(self, user_id: int, name: str, duration: int, description: str = ''):
         with self.connect() as session:
             task_meta = TaskMeta(name=name, description=description, author_id=user_id,
                                  duration=duration)

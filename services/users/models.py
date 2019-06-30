@@ -22,7 +22,7 @@ class TaskMeta(BaseUsers):
     name = Column(String, nullable=False)
     description = Column(String, default='')
     author_id = Column(Integer, nullable=False)
-    duration = Column(Float, nullable=False)
+    duration = Column(Integer, nullable=False)
     results = Column(String, nullable=True)
 
 
