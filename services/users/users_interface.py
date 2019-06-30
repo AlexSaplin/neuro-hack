@@ -1,3 +1,4 @@
+import json
 from contextlib import contextmanager
 from datetime import datetime
 
@@ -78,14 +79,19 @@ class UsersInterface:
 
     def remove_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
-            task = session.query(TaskMeta).filter(TaskMeta.id == task_id)
+            task = session.query(TaskMeta).filter(TaskMeta.id == task_id).first()
             user = self.get_usermeta_by_id(user_id)
-            task_user = (session.query(TaskUserMeta)
-                                .filter(TaskUserMeta.task_id == task_id, TaskUserMeta.user_id == user_id)
-                                .first())
+            task_user = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
+                                                           TaskUserMeta.user_id == user_id).first()
 
             measures = API.get_involve_estimate(user.token, task_user.start_time,
                                                 task_user.start_time + task.duration)
 
             task_user.results = str(measures)
             session.commit()
+
+    def fetch_task_results(self, task_id: int):
+        with self.connect() as session:
+            task = session.query(TaskMeta).filter(TaskMeta.id == task_id).first()
+            result = json.loads(task.results)
+        return result
