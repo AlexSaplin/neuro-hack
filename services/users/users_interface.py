@@ -26,27 +26,29 @@ class UsersInterface:
             session.close()
 
     def add_user(self, username: str, password: str):
+        id = 0
         with self.connect() as session:
             user_meta = UserMeta(name=username, password=password)
             session.add(user_meta)
-        return user_meta.id
+            id = user_meta.id
+        return id
 
     def get_usermeta_by_id(self, user_id: int):
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.id == user_id).first()
-        return result
+            return result
 
     def check_user_data(self, username: str, password: str):
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.name == username,
                                                     UserMeta.password == password).first()
-        return result.id  # будем возвращать нулл как надо если че
+            return result.id  # будем возвращать нулл как надо если че
 
     def add_task(self, user_id: int, name: str, description: str = ''):
         with self.connect() as session:
             task_meta = TaskMeta(name=name, description=description, author_id=user_id)
             session.add(task_meta)
-        return task_meta.id
+            return task_meta.id
 
     def remove_task(self, task_id: int):
         with self.connect() as session:
@@ -59,7 +61,7 @@ class UsersInterface:
                 result = session.query(TaskMeta).filter(TaskMeta.author_id == user_id).all()
             else:
                 result = session.query(TaskMeta).all()
-        return result
+            return result
 
     def add_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
