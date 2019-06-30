@@ -16,10 +16,10 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item ">
                 <a class="nav-link" href="list">Все задания </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="mylist">Мои задания<span class="sr-only">(current)</span></a>
             </li>
         </ul>
@@ -49,17 +49,17 @@
 
 <div class="container">
     <table id="dtBasicExample" class='table table-bordered table-striped table-hover table-sm' cellspacing="0"
-           width="70%">
+           width="100%">
         <thead>
         <tr>
-            <th class="th-sm">Name</th>
-            <th class="th-sm">Email</th>
-            <th class="th-sm">Country</th>
+            <th class="th-sm">Задания
+            <th class="th-sm">Вознаграждение
+            <th class="th-sm">Автор</th>
         </tr>
         </thead>
         <tbody>
         {% for task in tasks %}
-        <tr class="table-row" data-href="САЙТАСХАТА/{{task.author_id}}">
+        <tr class="table-row" data-href="task/{{task.id}}">
             <td>{{task.name}}</td>
             <td>{{task.cost}}</td>
             <td>{{task.author_id}}</td>
@@ -68,11 +68,11 @@
         </tbody>
         <tfoot>
         <tr>
-            <th>Name
+            <th>Задания
             </th>
-            <th>Email
+            <th>Вознаграждение
             </th>
-            <th>Country
+            <th>Автор
             </th>
         </tr>
         </tfoot>
@@ -89,7 +89,7 @@
         });
 
         $(document).ready(function () {
-            $('#dtBasicExample').DataTable();
+            $('#dtBasicExample').DataTable(); //TODO: изменить параметры и добавить css
             $('.dataTables_length').addClass('bs-select');
         });
 
