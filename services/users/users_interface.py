@@ -103,7 +103,7 @@ class UsersInterface:
             task_user = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                            TaskUserMeta.user_id == user_id).first()
 
-            measures = API.get_involve_estimate(user.token, task_user.start_time,
+            measures = API.get_involve_estimate(user['token'], task_user.start_time,
                                                 task_user.start_time + datetime.timedelta(task.duration))
 
             task_user.results = str(measures)

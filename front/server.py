@@ -42,7 +42,6 @@ def doTaskHandler(id):
     return render_template("doTask.html", name=current_task['name'], id=id)
 
 
-@app.route("/task/doTask/completed/<id>", methods=["POST"])
 @app.route("/givenTask/<id>", methods=['GET'])
 def givenTaskHandler(id):
     ui = UsersInterface()
@@ -51,9 +50,9 @@ def givenTaskHandler(id):
     tasks = ui.get_tasks()
     current_task = None
     for task in tasks:
-        if task.id == int(id):
+        if task['id'] == int(id):
             current_task = task
-    result = ui.fetch_task_results(current_task.id)
+    result = ui.fetch_task_results(current_task['id'])
     my_plot_div = plot([Scatter(x=result, y=[i for i in range(len(result))])], output_type='div')
     # my_plot_div = plot([Scatter(y=[random.random() * 100 for i in range(1000)], x=[i for i in range(1000)])],
     #                    output_type='div')
@@ -62,8 +61,7 @@ def givenTaskHandler(id):
                            )
     # return render_template('givenTask.html', name=current_task.name, id=id)
 
-
-@app.route("/completed/<id>", methods=["POST"])
+@app.route("/task/doTask/completed/<id>", methods=["POST"])
 def completeTaskHandler(id):
     ui = UsersInterface()
     user_id = session['user_id']
