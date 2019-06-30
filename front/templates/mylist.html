@@ -1,0 +1,129 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- MDBootstrap Datatables  -->
+    <script type="text/javascript" src="../static/js/addons/datatables.min.js"></script>
+    <link rel="stylesheet" href="../static/main.css"/>
+    <style>
+    input {
+    -webkit-appearance: none !important;
+    width: 100% !important;
+    border: none !important;
+    font-family: inherit !important;
+    padding: 12px 0 !important;
+    height: 48px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    border-bottom: 2px solid #C8CCD4 !important;
+    background: none !important;
+    border-radius: 0 !important;
+    color: #223254 !important;
+    transition: all .15s ease !important;
+}
+
+input:hover {
+  background: rgba(34,50,84,0.03) !important;
+}
+
+input:focus {
+  background: none !important;
+  outline: none !important;
+}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{url_for('listHandler')}}">NeuroRate</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+                <a class="nav-link" href="{{url_for('listHandler')}}">Все задания </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{url_for('mylistHandler')}}">Мои задания<span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+    <form method="post" action="{{url_for('logoutHandler')}}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
+    </form>
+</nav>
+<style>
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+    }
+
+    tr[data-href] {
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <table id="dtBasicExample" class='table table-bordered table-striped table-hover table-sm' cellspacing="0"
+           width="100%">
+        <thead>
+        <tr>
+            <th class="th-sm">Задания
+            <th class="th-sm">Вознаграждение
+            <th class="th-sm">Автор</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task, author in tasks %}
+        <tr class="table-row" data-href="givenTask/{{task['id']}}">
+            <td>{{task['name']}}</td>
+            <td>?</td>
+            <td>{{author}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>Задания
+            </th>
+            <th>Вознаграждение
+            </th>
+            <th>Автор
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rows = document.querySelectorAll("tr[data-href]");
+
+            rows.forEach(row => {
+                row.addEventListener("click", () => {
+                    window.location.href = row.dataset.href;
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable(); //TODO: изменить параметры и добавить css
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+    </script>
+<form method="get" action="add_task">
+    <button type="submit" class="btn btn-primary btn-block">Добавить новое задание</button>
+</form>
+</div>
+</body>
+</html>
