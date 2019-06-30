@@ -66,5 +66,6 @@ class API:
     def _datetime_range(start: datetime.datetime, end: datetime.datetime,
                         delta: datetime.timedelta):
         while start < end:
+            print(start)
             yield start
             start += delta
