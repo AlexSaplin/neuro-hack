@@ -1,3 +1,5 @@
+import json
+import numpy
 from contextlib import contextmanager
 from datetime import datetime
 
@@ -50,7 +52,7 @@ class UsersInterface:
             result_id = result.id if result is not None else None
         return result_id
 
-    def add_task(self, user_id: int, name: str, duration: float, description: str = ''):
+    def add_task(self, user_id: int, name: str, duration: int, description: str = ''):
         with self.connect() as session:
             task_meta = TaskMeta(name=name, description=description, author_id=user_id,
                                  duration=duration)
@@ -81,14 +83,27 @@ class UsersInterface:
 
     def remove_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
-            task = session.query(TaskMeta).filter(TaskMeta.id == task_id)
+            task = session.query(TaskMeta).filter(TaskMeta.id == task_id).first()
             user = self.get_usermeta_by_id(user_id)
-            task_user = (session.query(TaskUserMeta)
-                                .filter(TaskUserMeta.task_id == task_id, TaskUserMeta.user_id == user_id)
-                                .first())
+            task_user = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
+                                                           TaskUserMeta.user_id == user_id).first()
 
             measures = API.get_involve_estimate(user.token, task_user.start_time,
                                                 task_user.start_time + task.duration)
 
             task_user.results = str(measures)
             session.commit()
+
+    def fetch_task_results(self, task_id: int):
+        with self.connect() as session:
+            tasks = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id).all()
+            tasks_results = list(map(lambda x: x.results, filter(lambda x: x.results is not None, tasks)))
+        if len(tasks_results) == 0:
+            return []
+        result = []
+        for sec_idx in range(len(tasks_results[0])):
+            result.append(0.)
+            for user_result in tasks_results:
+                result[-1] += user_result[sec_idx]
+            result[-1] /= len(tasks_results)
+        return result
