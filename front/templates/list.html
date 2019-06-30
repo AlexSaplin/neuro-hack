@@ -5,6 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <!-- MDBootstrap Datatables  -->
     <script type="text/javascript" src="../static/js/addons/datatables.min.js"></script>
+    <link rel="stylesheet" href="../static/main.css"/>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -49,17 +50,17 @@
 
 <div class="container">
     <table id="dtBasicExample" class='table table-bordered table-striped table-hover table-sm' cellspacing="0"
-           width="70%">
+           width="100%">
         <thead>
         <tr>
-            <th class="th-sm">Name</th>
-            <th class="th-sm">Email</th>
-            <th class="th-sm">Country</th>
+            <th class="th-sm">Задание</th>
+            <th class="th-sm">Вознаграждение</th>
+            <th class="th-sm">Автор</th>
         </tr>
         </thead>
         <tbody>
         {% for task in tasks %}
-        <tr class="table-row" data-href="САЙТАСХАТА/{{task.author_id}}">
+        <tr class="table-row" data-href="task/{{task.id}}">
             <td>{{task.name}}</td>
             <td>{{task.cost}}</td>
             <td>{{task.author_id}}</td>
@@ -68,11 +69,11 @@
         </tbody>
         <tfoot>
         <tr>
-            <th>Name
+            <th>Задание
             </th>
-            <th>Email
+            <th>Вознаграждение
             </th>
-            <th>Country
+            <th>Автор
             </th>
         </tr>
         </tfoot>
