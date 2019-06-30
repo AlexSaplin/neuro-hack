@@ -1,4 +1,5 @@
 import json
+import numpy
 from contextlib import contextmanager
 from datetime import datetime
 
@@ -92,6 +93,14 @@ class UsersInterface:
 
     def fetch_task_results(self, task_id: int):
         with self.connect() as session:
-            task = session.query(TaskMeta).filter(TaskMeta.id == task_id).first()
-            result = json.loads(task.results)
+            tasks = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id).all()
+            tasks_results = list(map(lambda x: x.results, filter(lambda x: x.results is not None, tasks)))
+        if len(tasks_results) == 0:
+            return []
+        result = []
+        for sec_idx in range(len(tasks_results[0])):
+            result.append(0.)
+            for user_result in tasks_results:
+                result[-1] += user_result[sec_idx]
+            result[-1] /= len(tasks_results)
         return result

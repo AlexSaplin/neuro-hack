@@ -23,7 +23,6 @@ class TaskMeta(BaseUsers):
     description = Column(String, default='')
     author_id = Column(Integer, nullable=False)
     duration = Column(Integer, nullable=False)
-    results = Column(String, nullable=True)
 
 
 class TaskUserMeta(BaseUsers):
@@ -33,4 +32,5 @@ class TaskUserMeta(BaseUsers):
     task_id = Column(Integer, nullable=False)
     user_id = Column(Integer, nullable=False)
     start_time = Column(DateTime, nullable=False)
+    results = Column(String)
 
