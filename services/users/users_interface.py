@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from common.config import config
-from models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
+from services.users.models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
 
 
 class UsersInterface:
@@ -40,7 +40,7 @@ class UsersInterface:
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.name == username,
                                                     UserMeta.password == password).first()
-        return result is not None
+        return result.id
 
     def add_task(self, user_id: int, name: str, description: str = ''):
         with self.connect() as session:
