@@ -64,6 +64,3 @@ class API:
         while start < end:
             yield start
             start += delta
-
-print(API.get_involve_estimate(config.DEVICE_TOKEN, datetime.datetime(2019, 6, 30, 13, 28, 15),
-                               datetime.datetime(2019, 6, 30, 13, 28, 17)))

@@ -1,7 +1,7 @@
 import json
 import numpy
 from contextlib import contextmanager
-from datetime import datetime
+import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -52,7 +52,6 @@ class UsersInterface:
         with self.connect() as session:
             user_meta = UserMeta(name=username, password=password, token=token)
             session.add(user_meta)
-            session.flush()
             result_id = user_meta.id
         return result_id
 
@@ -74,7 +73,6 @@ class UsersInterface:
             task_meta = TaskMeta(name=name, description=description, author_id=user_id,
                                  duration=duration)
             session.add(task_meta)
-            session.flush()
             result = task_meta.id
         return result
 
@@ -96,7 +94,7 @@ class UsersInterface:
         with self.connect() as session:
             if session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                   TaskUserMeta.user_id == user_id).first() is None:
-                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, start_time=datetime.utcnow()))
+                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, start_time=datetime.datetime.utcnow()))
 
     def remove_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
@@ -105,8 +103,8 @@ class UsersInterface:
             task_user = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                            TaskUserMeta.user_id == user_id).first()
 
-            measures = API.get_involve_estimate(user['token'], task_user.start_time,
-                                                task_user.start_time + task.duration)
+            measures = API.get_involve_estimate(user.token, task_user.start_time,
+                                                task_user.start_time + datetime.timedelta(task.duration))
 
             task_user.results = str(measures)
             session.commit()
