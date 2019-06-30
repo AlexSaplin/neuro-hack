@@ -123,6 +123,9 @@ class UsersInterface:
             result[-1] /= len(tasks_results)
         return result
 
-    # def get_user_free_tasks(self, user_id: int):
-    #     with self.connect() as session:
-    #         user_locked_tasks = session.query(TaskUserMeta).filter(TaskUserMeta.user_id == user_id)
+    def get_user_free_tasks(self, user_id: int):
+        with self.connect() as session:
+            user_locked_tasks = session.query(TaskUserMeta).filter(TaskUserMeta.user_id == user_id).all()
+            locked_tasks_id = list(filter(lambda x: x.task_id, user_locked_tasks))
+        result = list(filter(lambda x: x['id'] not in locked_tasks_id, self.get_tasks()))
+        return result
