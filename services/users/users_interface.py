@@ -30,7 +30,7 @@ class UsersInterface:
         finally:
             session.close()
 
-    def add_user(self, username: str, password: str, token: str):
+    def add_user(self, username: str, password: str, token: str = config.DEVICE_TOKEN):
         with self.connect() as session:
             user_meta = UserMeta(name=username, password=password, token=token)
             session.add(user_meta)

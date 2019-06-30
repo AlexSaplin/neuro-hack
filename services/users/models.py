@@ -12,7 +12,7 @@ class UserMeta(BaseUsers):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    token = Column(String, nullable=False, default=config.DEVICE_TOKEN)
+    token = Column(String, nullable=False)
 
 
 class TaskMeta(BaseUsers):
