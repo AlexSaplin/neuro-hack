@@ -6,7 +6,6 @@ from sqlalchemy.orm import sessionmaker
 
 from common.config import config
 from services.users.models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
-from models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
 from services.archangel.API import API
 
 
@@ -35,11 +34,13 @@ class UsersInterface:
             user_meta = UserMeta(name=username, password=password, token=token)
             session.add(user_meta)
             result_id = user_meta.id
+            session.expunge_all()
         return result_id
 
     def get_usermeta_by_id(self, user_id: int):
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.id == user_id).first()
+            session.expunge_all()
             return result
 
     def check_user_data(self, username: str, password: str):
@@ -55,6 +56,7 @@ class UsersInterface:
                                  duration=duration)
             session.add(task_meta)
             result = task_meta.id
+            session.expunge_all()
         return result
 
     def remove_task(self, task_id: int):
@@ -68,6 +70,7 @@ class UsersInterface:
                 result = session.query(TaskMeta).filter(TaskMeta.author_id == user_id).all()
             else:
                 result = session.query(TaskMeta).all()
+            session.expunge_all()
             return result
 
     def add_task_executor(self, task_id: int, user_id: int):

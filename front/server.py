@@ -24,7 +24,7 @@ def task(id):
     return render_template("task-page.html", name=current_task.name, id=current_task.id, description=current_task.description,
                     author = ui.get_usermeta_by_id(current_task.author_id).name)
 
-@app.route("/doTask/<id>", methods=['POST'])
+@app.route("/task/doTask/<id>", methods=['POST'])
 def doTaskHandler(id):
     ui = UsersInterface()
     user_id = session['user_id']
@@ -87,3 +87,14 @@ def logoutHandler():
 def regHandler():
     return render_template('reg.html')
 
+@app.route('/add_task')
+def add_task_handler():
+    return render_template('addTask.html')
+
+@app.route('/commit_task', methods=['POST', 'GET'])
+def commit_task_handler():
+    ui = UsersInterface()
+    user_id = session['user_id']
+    ui.add_task(user_id=user_id, description=request.values['descriptionField'], duration=request.values['durationField'],
+                name=request.values['nameField'])
+    return redirect(url_for('listHandler'))

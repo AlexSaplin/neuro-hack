@@ -111,3 +111,14 @@ ul.leaders span + span:before {
   }
 }
 
+.dataTables_length {
+  visibility: hidden;
+}
+
+.dataTables_info {
+  visibility: hidden;
+}
+
+.dataTables_filter {
+  text-align: right;
+}
