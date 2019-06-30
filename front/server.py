@@ -9,7 +9,7 @@ app.secret_key = b'Ya.TvoyOtez'
 
 
 def start():
-    app.run()
+    app.run(debug=True)
 
 @app.route("/")
 def hello():
