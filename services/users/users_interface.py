@@ -31,18 +31,33 @@ class UsersInterface:
         finally:
             session.close()
 
+    def user_meta_to_dict(self, model: UserMeta):
+        return {
+            'id': model.id,
+            'name': model.name,
+            'password': model.password,
+            'token': model.token
+        } if model is not None else None
+
+    def task_meta_to_dict(self, model: TaskMeta):
+        return {
+            'id': model.id,
+            'name': model.name,
+            'description': model.description,
+            'author_id': model.author_id,
+            'duration': model.duration
+        } if model is not None else None
+
     def add_user(self, username: str, password: str, token: str = config.DEVICE_TOKEN):
         with self.connect() as session:
             user_meta = UserMeta(name=username, password=password, token=token)
             session.add(user_meta)
             result_id = user_meta.id
-            session.expunge_all()
         return result_id
 
     def get_usermeta_by_id(self, user_id: int):
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.id == user_id).first()
-            session.expunge_all()
             return result
 
     def check_user_data(self, username: str, password: str):
@@ -58,7 +73,6 @@ class UsersInterface:
                                  duration=duration)
             session.add(task_meta)
             result = task_meta.id
-            session.expunge_all()
         return result
 
     def remove_task(self, task_id: int):
@@ -69,11 +83,11 @@ class UsersInterface:
     def get_tasks(self, user_id: int = None):
         with self.connect() as session:
             if user_id is not None:
-                result = session.query(TaskMeta).filter(TaskMeta.author_id == user_id).all()
+                result_metas = session.query(TaskMeta).filter(TaskMeta.author_id == user_id).all()
             else:
-                result = session.query(TaskMeta).all()
-            session.expunge_all()
-            return result
+                result_metas = session.query(TaskMeta).all()
+            result = list(map(lambda x: self.task_meta_to_dict(x), result_metas))
+        return result
 
     def add_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
