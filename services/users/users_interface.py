@@ -8,7 +8,6 @@ from sqlalchemy.orm import sessionmaker
 
 from common.config import config
 from services.users.models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
-from models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
 from services.archangel.API import API
 
 
