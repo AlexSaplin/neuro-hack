@@ -1,10 +1,12 @@
 from contextlib import contextmanager
+import time
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from common.config import config
 from models import BaseUsers, UserMeta, TaskMeta, TaskUserMeta
+from services.archangel.API import API
 
 
 class UsersInterface:
@@ -42,9 +44,10 @@ class UsersInterface:
                                                     UserMeta.password == password).first()
         return result is not None
 
-    def add_task(self, user_id: int, name: str, description: str = ''):
+    def add_task(self, user_id: int, name: str, duration: int, description: str = ''):
         with self.connect() as session:
-            task_meta = TaskMeta(name=name, description=description, author_id=user_id)
+            task_meta = TaskMeta(name=name, description=description, author_id=user_id,
+                                 duration=duration)
             session.add(task_meta)
         return task_meta.id
 
@@ -65,9 +68,18 @@ class UsersInterface:
         with self.connect() as session:
             if session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                   TaskUserMeta.user_id == user_id).first() is None:
-                session.add(TaskUserMeta(task_id=task_id, user_id=user_id))
+                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, time=time.time()))
 
     def remove_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
-            session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
-                                               TaskUserMeta.user_id == user_id).delete()
+            task = session.query(TaskMeta).filter(TaskMeta.id == task_id)
+            user = self.get_usermeta_by_id(user_id)
+            task_user = (session.query(TaskUserMeta)
+                                .filter(TaskUserMeta.task_id == task_id, TaskUserMeta.user_id == user_id)
+                                .first())
+
+            measures = API.get_involve_estimate(user.token, task_user.start_time,
+                                                task_user.start_time + task.duration)
+
+            task_user.results = str(measures)
+            session.commit()
