@@ -24,6 +24,7 @@ class API:
                      "State": '1'}).text
 
         print(res)
+
         if json.loads(res)['c'] == 0:
             return None
         else:

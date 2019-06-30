@@ -82,11 +82,11 @@ def check():
 def reg():
     try:
         ui = UsersInterface()
-        id = ui.add_user(request.form['u'], request.form['p'])
+        user_id = ui.add_user(request.form['u'], request.form['p'])
     except Exception as e:
         print(e)
         return render_template('reg_failure.html')
-    session['user_id'] = id
+    session['user_id'] = user_id
     return redirect(url_for('listHandler'))
 
 @app.route('/list')
