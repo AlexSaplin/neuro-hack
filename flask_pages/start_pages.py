@@ -7,7 +7,7 @@ app = flask.Flask('users_interface', template_folder='html')
 @app.route('/login', methods=['POST'])
 def check():
     if app.users_interface.check_user_data(flask.request.form['u'], flask.request.form['p']):
-        app.users_interface.add_user(flask.request.form['u'], flask.request.form['p'])
+        id = app.users_interface.check_user_data(flask.request.form['u'], flask.request.form['p'])
         return  # страница с кабинетом
     return flask.render_template('login_failure.html')
 

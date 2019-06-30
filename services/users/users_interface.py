@@ -40,7 +40,7 @@ class UsersInterface:
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.name == username,
                                                     UserMeta.password == password).first()
-        return result is not None
+        return result.id  # будем возвращать нулл как надо если че
 
     def add_task(self, user_id: int, name: str, description: str = ''):
         with self.connect() as session:
