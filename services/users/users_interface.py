@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-import time
+from datetime import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -14,6 +14,8 @@ class UsersInterface:
     def __init__(self):
         self.engine = create_engine(config.DB_USERS_URL)
         self.sessionmaker = sessionmaker(bind=self.engine)
+        # If you changed models
+        # BaseUsers.metadata.drop_all(self.engine)
         BaseUsers.metadata.create_all(self.engine)
 
     @contextmanager
@@ -28,13 +30,12 @@ class UsersInterface:
         finally:
             session.close()
 
-    def add_user(self, username: str, password: str):
-        id = 0
+    def add_user(self, username: str, password: str, token: str):
         with self.connect() as session:
-            user_meta = UserMeta(name=username, password=password)
+            user_meta = UserMeta(name=username, password=password, token=token)
             session.add(user_meta)
-            id = user_meta.id
-        return id
+            result_id = user_meta.id
+        return result_id
 
     def get_usermeta_by_id(self, user_id: int):
         with self.connect() as session:
@@ -45,14 +46,16 @@ class UsersInterface:
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.name == username,
                                                     UserMeta.password == password).first()
-            return result.id  # будем возвращать нулл как надо если че
+            result_id = result.id if result is not None else None
+        return result_id
 
-    def add_task(self, user_id: int, name: str, duration: int, description: str = ''):
+    def add_task(self, user_id: int, name: str, duration: float, description: str = ''):
         with self.connect() as session:
             task_meta = TaskMeta(name=name, description=description, author_id=user_id,
                                  duration=duration)
             session.add(task_meta)
-            return task_meta.id
+            result = task_meta.id
+        return result
 
     def remove_task(self, task_id: int):
         with self.connect() as session:
@@ -71,7 +74,7 @@ class UsersInterface:
         with self.connect() as session:
             if session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                   TaskUserMeta.user_id == user_id).first() is None:
-                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, time=time.time()))
+                session.add(TaskUserMeta(task_id=task_id, user_id=user_id, start_time=datetime.utcnow()))
 
     def remove_task_executor(self, task_id: int, user_id: int):
         with self.connect() as session:
