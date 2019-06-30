@@ -19,10 +19,10 @@ def task(id):
     tasks = ui.get_tasks()
     current_task = None
     for task in tasks:
-        if task.id == int(id):
+        if task['id'] == int(id):
             current_task = task
-    return render_template("task-page.html", name=current_task.name, id=current_task.id, description=current_task.description,
-                    author = ui.get_usermeta_by_id(current_task.author_id).name)
+    return render_template("task-page.html", name=current_task['name'], id=current_task['id'], description=current_task['description'],
+                    author = ui.get_usermeta_by_id(current_task['author_id'])['name'])
 
 @app.route("/task/doTask/<id>", methods=['POST'])
 def doTaskHandler(id):
@@ -32,12 +32,12 @@ def doTaskHandler(id):
     tasks = ui.get_tasks()
     current_task = None
     for task in tasks:
-        if task.id == int(id):
+        if task['id'] == int(id):
             current_task = task
-    return render_template("doTask.html", name=current_task.name, id=id)
+    return render_template("doTask.html", name=current_task['name'], id=id)
 
 
-@app.route("/completed/<id>", methods=["POST"])
+@app.route("/task/doTask/completed/<id>", methods=["POST"])
 def completeTaskHandler(id):
     ui = UsersInterface()
     user_id = session['user_id']

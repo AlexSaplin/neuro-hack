@@ -86,10 +86,10 @@ input:focus {
         </thead>
         <tbody>
         {% for task in tasks %}
-        <tr class="table-row" data-href="task/{{task.id}}">
-            <td>{{task.name}}</td>
-            <td>{{task.cost}}</td>
-            <td>{{task.author_id}}</td>
+        <tr class="table-row" data-href="task/{{task['id']}}">
+            <td>{{task['name']}}</td>
+            <td>?</td>
+            <td>{{task['author_id']}}</td>
         </tr>
         {% endfor %}
         </tbody>

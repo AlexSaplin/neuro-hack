@@ -52,13 +52,15 @@ class UsersInterface:
         with self.connect() as session:
             user_meta = UserMeta(name=username, password=password, token=token)
             session.add(user_meta)
+            session.flush()
             result_id = user_meta.id
         return result_id
 
     def get_usermeta_by_id(self, user_id: int):
         with self.connect() as session:
             result = session.query(UserMeta).filter(UserMeta.id == user_id).first()
-            return result
+            result_dict = self.user_meta_to_dict(result)
+        return result_dict
 
     def check_user_data(self, username: str, password: str):
         with self.connect() as session:
@@ -72,6 +74,7 @@ class UsersInterface:
             task_meta = TaskMeta(name=name, description=description, author_id=user_id,
                                  duration=duration)
             session.add(task_meta)
+            session.flush()
             result = task_meta.id
         return result
 
@@ -102,7 +105,7 @@ class UsersInterface:
             task_user = session.query(TaskUserMeta).filter(TaskUserMeta.task_id == task_id,
                                                            TaskUserMeta.user_id == user_id).first()
 
-            measures = API.get_involve_estimate(user.token, task_user.start_time,
+            measures = API.get_involve_estimate(user['token'], task_user.start_time,
                                                 task_user.start_time + task.duration)
 
             task_user.results = str(measures)
